@@ -6,7 +6,6 @@
 ;; Created: June 10, 2017
 ;; Homepage: https://github.com/angrybacon/mtg
 ;; Keywords: convenience, games
-;; Package-Requires: ((company "0.9"))
 ;; Version: 0.1.0
 
 ;; This program is free software. You can redistribute it and/or modify it under
@@ -24,12 +23,10 @@
 
 ;; This package provides modes to facilitates building Magic: The Gathering card
 ;; decks.
-;;
-;; See http://www.mtgjson.com/.
 
 ;;; Code:
 
-(require 'company)
+
 (require 'format-spec)
 
 
@@ -104,73 +101,6 @@ The following %-sequences are supported:
          (buffer (get-buffer-create (mtg-generate-buffer-name mode deck))))
     (switch-to-buffer buffer)
     (funcall mode)))
-
-;; -----------------------------------------------------------------------------
-;; -----------------------------------------------------------------------------
-
-(require 'cl-lib)
-(require 'json)
-
-(defgroup company-mtg nil
-  "Company backend for `mtg'."
-  :group 'company
-  :prefix "company-mtg-")
-
-;; Custom
-;; -----------------------------------------------------------------------------
-
-(defcustom company-mtg-match-function 'string-prefix-p
-  "The matching function to use when finding candidates.
-You can set this variable to `company-mtg-match-fuzzy' or define your own function."
-  :group 'company-mtg
-  :type 'function)
-
-;; Features
-;; -----------------------------------------------------------------------------
-
-(defun company-mtg-match-fuzzy (prefix candidate)
-  (cl-subsetp (string-to-list prefix) (string-to-list candidate)))
-
-
-(defvar company-mtg-candidates nil "Store candidates after fetching cards.")
-(defvar company-mtg-candidates-2 nil "Store candidates after fetching cards.")
-
-(setq company-mtg-candidates-2
-      '(Air\ Elemental
-        (layout . "normal")
-        (name . "Air Elemental")
-        (manaCost . "{3}{U}{U}")
-        (cmc . 5)
-        (colors . ["Blue"])
-        (type . "Creature — Elemental")
-        (types . ["Creature"])
-        (subtypes . ["Elemental"])
-        (text . "Flying")
-        (power . "4")
-        (toughness . "4")
-        (imageName . "air elemental")
-        (colorIdentity . ["U"])))
-
-(setq company-mtg-candidates-2
-      '(#("Air Elemental" 0 1
-          (:layout "normal"))))
-
-(defun company-mtg-load-candidates ()
-  "Read JSON and store candidates inside `company-mtg-candidates'.
-See https://mtgjson.com/."
-  (interactive)
-  (setq company-mtg-candidates (json-read-file "AllCards.json")))
-
-;; (add-to-list 'company-backends 'company-mtg)
-(defun company-mtg (command &optional argument &rest ignored)
-  (interactive (list 'interactive))
-  (cl-case command
-    (interactive (company-begin-backend 'company-mtg))
-    (prefix (and (eq major-mode 'mtg-deck-mode) (company-grab-symbol)))
-    (candidates
-     (cl-remove-if-not
-      (lambda (c) (company-mtg-match-fuzzy argument c))
-      company-mtg-candidates-2))))
 
 (provide 'mtg)
 ;;; mtg.el ends here
