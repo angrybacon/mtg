@@ -32,14 +32,15 @@
 (require 'company)
 (require 'format-spec)
 
+
+;;;; Variables
+
+
 (defgroup mtg nil
   "Build decks for Magic: The Gathering."
   :group 'convenience
   :group 'games
   :prefix "mtg-")
-
-;; Custom
-;; -----------------------------------------------------------------------------
 
 (defcustom mtg-buffer-name-format "*%m%n*"
   "The format string used to name MTG buffers.
@@ -49,12 +50,17 @@ The following %-sequences are supported:
   :group 'mtg
   :type 'string)
 
-;; Modes
-;; -----------------------------------------------------------------------------
+
+;;;; Modes
+
 
 (defvar mtg-splash-mode-map nil "Keymap used in `mtg-splash-mode' buffers.")
 (setq mtg-splash-mode-map (let ((map (make-sparse-keymap)))
                             map))
+
+(defvar mtg-deck-mode-map nil "Keymap used in `mtg-deck-mode' buffers.")
+(setq mtg-deck-mode-map (let ((map (make-sparse-keymap)))
+                          map))
 
 ;;;###autoload
 (define-derived-mode mtg-splash-mode special-mode "MTG"
@@ -62,10 +68,6 @@ The following %-sequences are supported:
   :group 'mtg
   (buffer-disable-undo)
   (setq buffer-read-only t))
-
-(defvar mtg-deck-mode-map nil "Keymap used in `mtg-deck-mode' buffers.")
-(setq mtg-deck-mode-map (let ((map (make-sparse-keymap)))
-                          map))
 
 ;;;###autoload
 (define-derived-mode mtg-deck-mode text-mode "MTG Deck"
@@ -75,8 +77,9 @@ The following %-sequences are supported:
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.dec\\'" . mtg-deck-mode) t)
 
-;; Features
-;; -----------------------------------------------------------------------------
+
+;;;; Functions
+
 
 (defun mtg-generate-buffer-name (mode &optional deck)
   "Generate a buffer name based on `mtg-buffer-name-format'."
