@@ -26,12 +26,9 @@
 
 ;;; Code:
 
-
 (require 'format-spec)
 
-
 ;;;; Variables
-
 
 (defgroup mtg nil
   "Build decks for Magic: The Gathering."
@@ -47,9 +44,12 @@ The following %-sequences are supported:
   :group 'mtg
   :type 'string)
 
+(defcustom mtg-directory (locate-user-emacs-file "mtg/")
+  "The root directory for all `mtg' related files."
+  :group 'mtg
+  :type 'string)
 
 ;;;; Modes
-
 
 (defvar mtg-splash-mode-map nil "Keymap used in `mtg-splash-mode' buffers.")
 (setq mtg-splash-mode-map (let ((map (make-sparse-keymap)))
@@ -74,9 +74,7 @@ The following %-sequences are supported:
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.dec\\'" . mtg-deck-mode) t)
 
-
 ;;;; Functions
-
 
 (defun mtg-generate-buffer-name (mode &optional deck)
   "Generate a buffer name based on `mtg-buffer-name-format'."
@@ -103,4 +101,5 @@ The following %-sequences are supported:
     (funcall mode)))
 
 (provide 'mtg)
+
 ;;; mtg.el ends here
